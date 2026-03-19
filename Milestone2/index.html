@@ -38,6 +38,7 @@
 $(document).ready(function () {
     var allBooks = [];
     var resultsPerPage = 10;
+    var apiKey = "AIzaSyD1LDXycgXy_MazXWbDpqpYApRHg3U2g0w";
 
     function displayPage(pageNumber) {
         var start = (pageNumber - 1) * resultsPerPage;
@@ -84,19 +85,26 @@ $(document).ready(function () {
             return;
         }
 
-        var url = "https://www.googleapis.com/books/v1/volumes?q=" + encodeURIComponent(searchTerm) + "&maxResults=40";
+        var url = "https://www.googleapis.com/books/v1/volumes?q=" 
+            + encodeURIComponent(searchTerm) 
+            + "&maxResults=40&key=" + apiKey;
 
         $.getJSON(url, function (data) {
             if (data.items) {
-                allBooks = data.items.slice(0, 40);
+                allBooks = data.items;
                 buildPageMenu();
                 displayPage(1);
             } else {
                 $("#results").html("<p>No books found.</p>");
                 $("#pageSelect").html("");
             }
-        }).fail(function () {
-            $("#results").html("<p>There was an error retrieving data from the API.</p>");
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            $("#results").html(
+                "<p>There was an error retrieving data from the API.</p>" +
+                "<p>Status: " + textStatus + "</p>" +
+                "<p>Error: " + errorThrown + "</p>"
+            );
+            console.log(jqXHR.responseText);
         });
     });
 
