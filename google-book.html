@@ -1,1 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Google Books - Single Book</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
 
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #003366;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #e6e6e6;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #003366;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        .book-card {
+            background-color: #f4f4f4;
+            border-left: 5px solid #003366;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .book-card img {
+            max-width: 200px;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .book-card h2 {
+            margin-top: 0;
+            color: #003366;
+        }
+
+        .links a {
+            display: inline-block;
+            margin-right: 15px;
+            color: #003366;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: #003366;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Google Books - Single Book</h1>
+    <h2>IT 4403 Individual Project</h2>
+</header>
+
+<nav>
+    <a href="index.html">Home</a>
+</nav>
+
+<main>
+    <div id="bookOutput"></div>
+</main>
+
+<footer>
+    <p>2026 IT 4403</p>
+</footer>
+
+<script>
+$(document).ready(function () {
+    $.getJSON("google-books-book.json", function (data) {
+        var book = data.volumeInfo;
+
+        var authors = "N/A";
+        if (book.authors) {
+            authors = book.authors.join(", ");
+        }
+
+        var categories = "N/A";
+        if (book.categories) {
+            categories = book.categories.join(", ");
+        }
+
+        var image = "";
+        if (book.imageLinks && book.imageLinks.thumbnail) {
+            image = '<img src="' + book.imageLinks.thumbnail + '" alt="Book cover">';
+        }
+
+        var html = '<div class="book-card">';
+        html += image;
+        html += '<h2>' + book.title + '</h2>';
+
+        if (book.subtitle) {
+            html += '<p><strong>Subtitle:</strong> ' + book.subtitle + '</p>';
+        }
+
+        html += '<p><strong>Author(s):</strong> ' + authors + '</p>';
+        html += '<p><strong>Publisher:</strong> ' + (book.publisher || "N/A") + '</p>';
+        html += '<p><strong>Published Date:</strong> ' + (book.publishedDate || "N/A") + '</p>';
+        html += '<p><strong>Page Count:</strong> ' + (book.pageCount || "N/A") + '</p>';
+        html += '<p><strong>Categories:</strong> ' + categories + '</p>';
+
+        if (book.description) {
+            html += '<h3>Description</h3>';
+            html += '<div>' + book.description + '</div>';
+        }
+
+        html += '<div class="links">';
+        if (book.previewLink) {
+            html += '<a href="' + book.previewLink + '" target="_blank">Preview Book</a>';
+        }
+        if (book.infoLink) {
+            html += '<a href="' + book.infoLink + '" target="_blank">More Information</a>';
+        }
+        html += '</div>';
+
+        html += '</div>';
+
+        $("#bookOutput").html(html);
+    });
+});
+</script>
+
+</body>
+</html>
