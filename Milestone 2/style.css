@@ -1,1 +1,97 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
 
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    color: #1a1a1a;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: #003366;
+    color: #ffffff;
+    padding: 20px;
+    text-align: center;
+}
+
+nav {
+    background-color: #e6e6e6;
+    padding: 10px;
+    text-align: center;
+}
+
+nav a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: #003366;
+    font-weight: bold;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+main {
+    padding: 20px;
+    flex: 1;
+}
+
+.search-section {
+    margin-bottom: 30px;
+}
+
+input[type="text"] {
+    padding: 8px;
+    width: 250px;
+}
+
+button {
+    padding: 8px 12px;
+    background-color: #003366;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #00509e;
+}
+
+select {
+    padding: 6px;
+}
+
+.book-card,
+.details-card {
+    background-color: #f4f4f4;
+    border-left: 5px solid #003366;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.book-card img,
+.details-card img {
+    max-width: 150px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.book-card h3,
+.details-card h2 {
+    margin-top: 0;
+}
+
+.book-card a {
+    color: #003366;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.book-card a:hover {
+    text-decoration: underline;
+}
