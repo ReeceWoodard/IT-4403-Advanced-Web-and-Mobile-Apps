@@ -1,1 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Search App</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
 
+<header>
+    <h1>Google Books Web App</h1>
+    <h2>Milestone 2 - IT 4403</h2>
+</header>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="bookshelf.html">My Bookshelf</a>
+</nav>
+
+<main>
+    <section class="search-section">
+        <h3>Book Search</h3>
+        <input type="text" id="searchInput" placeholder="Enter keywords">
+        <button id="searchButton">Search</button>
+        <br><br>
+
+        <label for="pageSelect">Select Page:</label>
+        <select id="pageSelect"></select>
+    </section>
+
+    <section>
+        <div id="results"></div>
+    </section>
+</main>
+
+<script>
+$(document).ready(function () {
+    var allBooks = [];
+    var resultsPerPage = 10;
+
+    function displayPage(pageNumber) {
+        var start = (pageNumber - 1) * resultsPerPage;
+        var end = start + resultsPerPage;
+        var pageBooks = allBooks.slice(start, end);
+
+        var html = "";
+
+        $.each(pageBooks, function (index, item) {
+            var book = item.volumeInfo;
+            var title = book.title || "No title available";
+            var image = "";
+
+            if (book.imageLinks && book.imageLinks.thumbnail) {
+                image = '<img src="' + book.imageLinks.thumbnail + '" alt="Book cover">';
+            }
+
+            html += '<div class="book-card">';
+            html += image;
+            html += '<h3><a href="details.html?id=' + item.id + '">' + title + '</a></h3>';
+            html += '</div>';
+        });
+
+        $("#results").html(html);
+    }
+
+    function buildPageMenu() {
+        var totalPages = Math.ceil(allBooks.length / resultsPerPage);
+        var options = "";
+
+        for (var count = 1; count <= totalPages; count++) {
+            options += '<option value="' + count + '">Page ' + count + '</option>';
+        }
+
+        $("#pageSelect").html(options);
+    }
+
+    $("#searchButton").click(function () {
+        var searchTerm = $("#searchInput").val().trim();
+
+        if (searchTerm === "") {
+            $("#results").html("<p>Please enter a search term.</p>");
+            $("#pageSelect").html("");
+            return;
+        }
+
+        var url = "https://www.googleapis.com/books/v1/volumes?q=" + encodeURIComponent(searchTerm) + "&maxResults=40";
+
+        $.getJSON(url, function (data) {
+            if (data.items) {
+                allBooks = data.items.slice(0, 40);
+                buildPageMenu();
+                displayPage(1);
+            } else {
+                $("#results").html("<p>No books found.</p>");
+                $("#pageSelect").html("");
+            }
+        }).fail(function () {
+            $("#results").html("<p>There was an error retrieving data from the API.</p>");
+        });
+    });
+
+    $("#pageSelect").change(function () {
+        var selectedPage = parseInt($(this).val());
+        displayPage(selectedPage);
+    });
+});
+</script>
+
+</body>
+</html>
