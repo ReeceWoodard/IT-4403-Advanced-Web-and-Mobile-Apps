@@ -1,1 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Open Library - Search Results</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
 
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #003366;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #e6e6e6;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #003366;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        .book-card {
+            background-color: #f4f4f4;
+            border-left: 5px solid #003366;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .book-card h2 {
+            margin-top: 0;
+            color: #003366;
+        }
+
+        .book-links a {
+            display: inline-block;
+            margin-right: 15px;
+            color: #003366;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .book-links a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: #003366;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Open Library - Search Results</h1>
+    <h2>IT 4403 Individual Project</h2>
+</header>
+
+<nav>
+    <a href="index.html">Home</a>
+</nav>
+
+<main>
+    <div id="bookList"></div>
+</main>
+
+<footer>
+    <p>2026 IT 4403</p>
+</footer>
+
+<script>
+$(document).ready(function () {
+    $.getJSON("openlibrary-search.json", function (data) {
+        var html = "";
+
+        $.each(data.docs, function (index, book) {
+            var authors = "N/A";
+            if (book.author_name) {
+                authors = book.author_name.join(", ");
+            }
+
+            var publishers = "N/A";
+            if (book.publisher) {
+                publishers = book.publisher.join(", ");
+            }
+
+            var years = "N/A";
+            if (book.publish_year) {
+                years = book.publish_year.join(", ");
+            }
+
+            html += '<div class="book-card">';
+            html += '<h2>' + book.title + '</h2>';
+            html += '<p><strong>Author(s):</strong> ' + authors + '</p>';
+            html += '<p><strong>Publisher(s):</strong> ' + publishers + '</p>';
+            html += '<p><strong>Publish Year(s):</strong> ' + years + '</p>';
+
+            if (book.isbn) {
+                html += '<p><strong>ISBN:</strong> ' + book.isbn[0] + '</p>';
+            }
+
+            html += '<div class="book-links">';
+            if (book.key) {
+                html += '<a href="https://openlibrary.org' + book.key + '" target="_blank">Open Library Page</a>';
+            }
+            html += '</div>';
+
+            html += '</div>';
+        });
+
+        $("#bookList").html(html);
+    });
+});
+</script>
+
+</body>
+</html>
