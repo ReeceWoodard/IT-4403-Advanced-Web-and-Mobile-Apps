@@ -48,7 +48,8 @@ $(document).ready(function () {
         return;
     }
 
-    var url = "https://www.googleapis.com/books/v1/volumes/" + bookId;
+    var apiKey = "AIzaSyD1LDXycgXy_MazXWbDpqpYApRHg3U2g0w";
+    var url = "https://www.googleapis.com/books/v1/volumes/" + bookId + "?key=" + apiKey;
 
     $.getJSON(url, function (data) {
         var book = data.volumeInfo;
