@@ -1,1 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Open Library - Single Book</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
 
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #003366;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #e6e6e6;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #003366;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        .book-card {
+            background-color: #f4f4f4;
+            border-left: 5px solid #003366;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .book-card img {
+            max-width: 200px;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .book-card h2 {
+            margin-top: 0;
+            color: #003366;
+        }
+
+        .book-links a {
+            display: inline-block;
+            margin-right: 15px;
+            color: #003366;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .book-links a:hover {
+            text-decoration: underline;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        footer {
+            background-color: #003366;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Open Library - Single Book</h1>
+    <h2>IT 4403 Individual Project</h2>
+</header>
+
+<nav>
+    <a href="index.html">Home</a>
+</nav>
+
+<main>
+    <div id="bookOutput"></div>
+</main>
+
+<footer>
+    <p>2026 IT 4403</p>
+</footer>
+
+<script>
+$(document).ready(function () {
+    $.getJSON("openlibrary-book.json", function (data) {
+        var book = data["ISBN:1593274874"];
+
+        var authors = "N/A";
+        if (book.authors) {
+            var authorNames = [];
+            $.each(book.authors, function (index, author) {
+                authorNames.push(author.name);
+            });
+            authors = authorNames.join(", ");
+        }
+
+        var publishers = "N/A";
+        if (book.publishers) {
+            var publisherNames = [];
+            $.each(book.publishers, function (index, publisher) {
+                publisherNames.push(publisher.name);
+            });
+            publishers = publisherNames.join(", ");
+        }
+
+        var places = "N/A";
+        if (book.publish_places) {
+            var placeNames = [];
+            $.each(book.publish_places, function (index, place) {
+                placeNames.push(place.name);
+            });
+            places = placeNames.join(", ");
+        }
+
+        var html = '<div class="book-card">';
+
+        if (book.cover && book.cover.medium) {
+            html += '<img src="' + book.cover.medium + '" alt="Book cover">';
+        }
+
+        html += '<h2>' + book.title + '</h2>';
+
+        if (book.subtitle) {
+            html += '<p><strong>Subtitle:</strong> ' + book.subtitle + '</p>';
+        }
+
+        html += '<p><strong>Author(s):</strong> ' + authors + '</p>';
+        html += '<p><strong>Publisher(s):</strong> ' + publishers + '</p>';
+        html += '<p><strong>Publish Date:</strong> ' + (book.publish_date || "N/A") + '</p>';
+        html += '<p><strong>Publish Place(s):</strong> ' + places + '</p>';
+        html += '<p><strong>Pagination:</strong> ' + (book.pagination || "N/A") + '</p>';
+
+        if (book.table_of_contents) {
+            html += '<h3>Table of Contents</h3>';
+            html += '<ul>';
+            $.each(book.table_of_contents, function (index, item) {
+                html += '<li>' + item.title + '</li>';
+            });
+            html += '</ul>';
+        }
+
+        html += '<div class="book-links">';
+        if (book.url) {
+            html += '<a href="' + book.url + '" target="_blank">Open Library Page</a>';
+        }
+        html += '</div>';
+
+        html += '</div>';
+
+        $("#bookOutput").html(html);
+    });
+});
+</script>
+
+</body>
+</html>
