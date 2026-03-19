@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Single Book</title>
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        .book {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-left: 5px solid #003366;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Single Book Information</h1>
+</header>
+
+<nav>
+    <a href="index.html">Home</a>
+</nav>
+
+<main>
+    <div id="book-container"></div>
+</main>
+
+<script>
+$(document).ready(function() {
+
+    $.getJSON("google-books-book.json", function(data) {
+
+        let book = data;
+
+        let html = `
+            <div class="book">
+                <h2>${book.title}</h2>
+                <p><strong>Author:</strong> ${book.authors}</p>
+                <p>${book.description}</p>
+            </div>
+        `;
+
+        $("#book-container").html(html);
+    });
+
+});
+</script>
+
+</body>
+</html>
