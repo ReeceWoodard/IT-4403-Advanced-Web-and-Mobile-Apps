@@ -243,7 +243,7 @@ $(document).ready(function () {
         $("#collection").html("<p>Loading bookshelf collection...</p>");
 
         $.ajax({
-            url: "https://www.googleapis.com/books/v1/users/" + publicUserId + "/bookshelves/" + publicShelfId + "/volumes",
+            url: "https://www.googleapis.com/books/v1/user/" + publicUserId + "/bookshelves/" + publicShelfId + "/volumes",
             dataType: "jsonp",
             data: buildData({
                 maxResults: 10
