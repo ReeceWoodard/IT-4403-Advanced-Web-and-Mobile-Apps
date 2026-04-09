@@ -3,7 +3,6 @@ $(document).ready(function () {
     let currentPage = 1;
     let booksPerPage = 10;
 
-    // Change these if your instructor gave you a specific bookshelf
     let publicUserId = "108247213567979759910";
     let publicShelfId = "1001";
 
