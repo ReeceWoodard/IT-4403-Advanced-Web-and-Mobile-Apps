@@ -4,7 +4,7 @@ $(document).ready(function () {
     let booksPerPage = 10;
 
     let publicUserId = "smTHKm5ylLHCwuaaijD3BA";
-    let publicShelfId = "smTHKm5ylLHCwuaaijD3BA";
+    let publicShelfId = "1000";
 
     $("#searchBtn").click(function () {
         let searchText = $("#searchInput").val().trim();
