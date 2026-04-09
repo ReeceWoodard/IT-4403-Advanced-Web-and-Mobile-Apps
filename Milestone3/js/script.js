@@ -33,7 +33,7 @@ $(document).ready(function () {
 
         $.ajax({
             url: "https://www.googleapis.com/books/v1/volumes",
-            method: "GET",
+            dataType: "jsonp",
             data: {
                 q: searchText,
                 startIndex: 0,
@@ -46,7 +46,7 @@ $(document).ready(function () {
 
                 $.ajax({
                     url: "https://www.googleapis.com/books/v1/volumes",
-                    method: "GET",
+                    dataType: "jsonp",
                     data: {
                         q: searchText,
                         startIndex: 40,
@@ -66,12 +66,7 @@ $(document).ready(function () {
                         }
                     },
                     error: function () {
-                        if (allBooks.length === 0) {
-                            $("#results").html("<p>There was an error retrieving data from the API.</p>");
-                        } else {
-                            displayPage(currentPage);
-                            createPagination();
-                        }
+                        $("#results").html("<p>Could not load more search results.</p>");
                     }
                 });
             },
@@ -97,9 +92,11 @@ $(document).ready(function () {
                 title = book.volumeInfo.title;
             }
 
-            if (book.volumeInfo &&
+            if (
+                book.volumeInfo &&
                 book.volumeInfo.imageLinks &&
-                book.volumeInfo.imageLinks.thumbnail) {
+                book.volumeInfo.imageLinks.thumbnail
+            ) {
                 image = book.volumeInfo.imageLinks.thumbnail;
             }
 
@@ -148,38 +145,47 @@ $(document).ready(function () {
     function getBookDetails(bookId) {
         $("#details").html("<p>Loading book details...</p>");
 
-        $.getJSON("https://www.googleapis.com/books/v1/volumes/" + bookId, function (book) {
-            let title = "No title available";
-            let authors = "Unknown author";
-            let description = "No description available.";
-            let image = "https://via.placeholder.com/120x180?text=No+Cover";
+        $.ajax({
+            url: "https://www.googleapis.com/books/v1/volumes/" + bookId,
+            dataType: "jsonp",
+            success: function (book) {
+                let title = "No title available";
+                let authors = "Unknown author";
+                let description = "No description available.";
+                let image = "https://via.placeholder.com/120x180?text=No+Cover";
 
-            if (book.volumeInfo.title) {
-                title = book.volumeInfo.title;
+                if (book.volumeInfo && book.volumeInfo.title) {
+                    title = book.volumeInfo.title;
+                }
+
+                if (book.volumeInfo && book.volumeInfo.authors) {
+                    authors = book.volumeInfo.authors.join(", ");
+                }
+
+                if (book.volumeInfo && book.volumeInfo.description) {
+                    description = book.volumeInfo.description;
+                }
+
+                if (
+                    book.volumeInfo &&
+                    book.volumeInfo.imageLinks &&
+                    book.volumeInfo.imageLinks.thumbnail
+                ) {
+                    image = book.volumeInfo.imageLinks.thumbnail;
+                }
+
+                let detailsHtml = `
+                    <img src="${image}" alt="${title}">
+                    <h3>${title}</h3>
+                    <p><strong>Author(s):</strong> ${authors}</p>
+                    <p><strong>Description:</strong> ${description}</p>
+                `;
+
+                $("#details").html(detailsHtml);
+            },
+            error: function () {
+                $("#details").html("<p>Could not load book details.</p>");
             }
-
-            if (book.volumeInfo.authors) {
-                authors = book.volumeInfo.authors.join(", ");
-            }
-
-            if (book.volumeInfo.description) {
-                description = book.volumeInfo.description;
-            }
-
-            if (book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail) {
-                image = book.volumeInfo.imageLinks.thumbnail;
-            }
-
-            let detailsHtml = `
-                <img src="${image}" alt="${title}">
-                <h3>${title}</h3>
-                <p><strong>Author(s):</strong> ${authors}</p>
-                <p><strong>Description:</strong> ${description}</p>
-            `;
-
-            $("#details").html(detailsHtml);
-        }).fail(function () {
-            $("#details").html("<p>Could not load book details.</p>");
         });
     }
 
@@ -188,7 +194,7 @@ $(document).ready(function () {
 
         $.ajax({
             url: "https://www.googleapis.com/books/v1/users/" + publicUserId + "/bookshelves/" + publicShelfId + "/volumes",
-            method: "GET",
+            dataType: "jsonp",
             data: {
                 maxResults: 10
             },
@@ -209,9 +215,11 @@ $(document).ready(function () {
                         title = book.volumeInfo.title;
                     }
 
-                    if (book.volumeInfo &&
+                    if (
+                        book.volumeInfo &&
                         book.volumeInfo.imageLinks &&
-                        book.volumeInfo.imageLinks.thumbnail) {
+                        book.volumeInfo.imageLinks.thumbnail
+                    ) {
                         image = book.volumeInfo.imageLinks.thumbnail;
                     }
 
