@@ -3,8 +3,8 @@ $(document).ready(function () {
     let currentPage = 1;
     let booksPerPage = 10;
 
-    let publicUserId = "smTHKm5ylLHCwuaaijD3BA";
-    let publicShelfId = "1000";
+    let publicUserId = "102603143712539426156";
+    let publicShelfId = "1001";
 
     $("#searchBtn").click(function () {
         let searchText = $("#searchInput").val().trim();
