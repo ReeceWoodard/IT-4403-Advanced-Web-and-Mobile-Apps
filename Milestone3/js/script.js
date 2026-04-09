@@ -4,7 +4,7 @@ $(document).ready(function () {
     let booksPerPage = 10;
 
     let publicUserId = "102603143712539426156";
-    let publicShelfId = "1001";
+    let publicShelfId = "2";
 
     $("#searchBtn").click(function () {
         let searchText = $("#searchInput").val().trim();
