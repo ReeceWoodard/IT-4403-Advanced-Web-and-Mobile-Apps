@@ -6,6 +6,8 @@ $(document).ready(function () {
     let publicUserId = "102603143712539426156";
     let publicShelfId = "2";
 
+    let apiKey = "AIzaSyD1LDXycgXy_MazXWbDpqpYApRHg3U2g0w";
+
     $("#searchBtn").click(function () {
         let searchText = $("#searchInput").val().trim();
 
@@ -23,10 +25,25 @@ $(document).ready(function () {
         }
     });
 
+    function buildData(extraData) {
+        let requestData = {};
+
+        if (apiKey !== "") {
+            requestData.key = apiKey;
+        }
+
+        for (let key in extraData) {
+            requestData[key] = extraData[key];
+        }
+
+        return requestData;
+    }
+
     function searchBooks(searchText) {
         $("#results").html("<p>Loading books...</p>");
         $("#pagination").html("");
         $("#details").html("<p>Click a book to see details here.</p>");
+        $("#pageIndicator").text("Loading...");
 
         allBooks = [];
         currentPage = 1;
@@ -34,12 +51,18 @@ $(document).ready(function () {
         $.ajax({
             url: "https://www.googleapis.com/books/v1/volumes",
             dataType: "jsonp",
-            data: {
+            data: buildData({
                 q: searchText,
                 startIndex: 0,
                 maxResults: 40
-            },
+            }),
             success: function (data) {
+                if (data.error) {
+                    $("#results").html("<p>" + data.error.message + "</p>");
+                    $("#pageIndicator").text("Page 0 of 0");
+                    return;
+                }
+
                 if (data.items) {
                     allBooks = allBooks.concat(data.items);
                 }
@@ -47,12 +70,25 @@ $(document).ready(function () {
                 $.ajax({
                     url: "https://www.googleapis.com/books/v1/volumes",
                     dataType: "jsonp",
-                    data: {
+                    data: buildData({
                         q: searchText,
                         startIndex: 40,
                         maxResults: 10
-                    },
+                    }),
                     success: function (data2) {
+                        if (data2.error) {
+                            // Show the first 40 if the second request fails
+                            if (allBooks.length > 0) {
+                                displayPage(currentPage);
+                                createPagination();
+                                $("#results").prepend("<p>Only part of the results could be loaded.</p>");
+                            } else {
+                                $("#results").html("<p>" + data2.error.message + "</p>");
+                                $("#pageIndicator").text("Page 0 of 0");
+                            }
+                            return;
+                        }
+
                         if (data2.items) {
                             allBooks = allBooks.concat(data2.items);
                         }
@@ -66,12 +102,20 @@ $(document).ready(function () {
                         }
                     },
                     error: function () {
-                        $("#results").html("<p>Could not load more search results.</p>");
+                        if (allBooks.length > 0) {
+                            displayPage(currentPage);
+                            createPagination();
+                            $("#results").prepend("<p>Only part of the results could be loaded.</p>");
+                        } else {
+                            $("#results").html("<p>Could not load search results.</p>");
+                            $("#pageIndicator").text("Page 0 of 0");
+                        }
                     }
                 });
             },
             error: function () {
                 $("#results").html("<p>There was an error retrieving data from the API.</p>");
+                $("#pageIndicator").text("Page 0 of 0");
             }
         });
     }
@@ -148,7 +192,13 @@ $(document).ready(function () {
         $.ajax({
             url: "https://www.googleapis.com/books/v1/volumes/" + bookId,
             dataType: "jsonp",
+            data: buildData({}),
             success: function (book) {
+                if (book.error) {
+                    $("#details").html("<p>" + book.error.message + "</p>");
+                    return;
+                }
+
                 let title = "No title available";
                 let authors = "Unknown author";
                 let description = "No description available.";
@@ -195,10 +245,15 @@ $(document).ready(function () {
         $.ajax({
             url: "https://www.googleapis.com/books/v1/users/" + publicUserId + "/bookshelves/" + publicShelfId + "/volumes",
             dataType: "jsonp",
-            data: {
+            data: buildData({
                 maxResults: 10
-            },
+            }),
             success: function (data) {
+                if (data.error) {
+                    $("#collection").html("<p>" + data.error.message + "</p>");
+                    return;
+                }
+
                 $("#collection").html("");
 
                 if (!data.items || data.items.length === 0) {
