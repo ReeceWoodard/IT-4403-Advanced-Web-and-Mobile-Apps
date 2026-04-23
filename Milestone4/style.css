@@ -24,6 +24,8 @@ button{
 padding:10px 15px;
 margin:5px;
 cursor:pointer;
+border:none;
+border-radius:5px;
 }
 
 main{
@@ -49,6 +51,13 @@ padding:15px;
 border-radius:10px;
 box-shadow:0 2px 6px rgba(0,0,0,.1);
 text-align:center;
+cursor:pointer;
+transition:.2s;
+}
+
+.book-card:hover{
+transform:scale(1.02);
+box-shadow:0 4px 12px rgba(0,0,0,.15);
 }
 
 .list-view .book-card{
@@ -63,15 +72,12 @@ height:220px;
 object-fit:cover;
 }
 
-.book-card:hover{
-transform:scale(1.02);
-}
-
 #detailsPanel{
 background:white;
 padding:25px;
 margin-top:30px;
 border-radius:10px;
+box-shadow:0 2px 6px rgba(0,0,0,.1);
 }
 
 .detail-card{
@@ -97,6 +103,11 @@ width:90%;
 
 .detail-card{
 flex-direction:column;
+}
+
+.list-view .book-card{
+flex-direction:column;
+text-align:center;
 }
 
 }
