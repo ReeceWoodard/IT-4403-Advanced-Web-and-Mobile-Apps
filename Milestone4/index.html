@@ -16,8 +16,7 @@
 <h1>Book Finder SPA</h1>
 
 <div class="search-bar">
-<input type="text" id="searchInput"
-placeholder="Search books...">
+<input type="text" id="searchInput" placeholder="Search books...">
 <button id="searchBtn">Search</button>
 </div>
 
@@ -30,7 +29,6 @@ placeholder="Search books...">
 <button id="showSearch">Search Results</button>
 <button id="showCollection">Collection</button>
 </div>
-
 </header>
 
 <main>
@@ -38,43 +36,23 @@ placeholder="Search books...">
 <section id="collectionPanel">
 <h2>Public Collection</h2>
 
-<button id="popularBooks">
-Popular Books
-</button>
+<button id="popularBooks">Popular Books</button>
+<button id="topRatedBooks">Top Rated Picks</button>
 
-<button id="topRatedBooks">
-Top Rated Picks
-</button>
-
-<div id="collectionResults"
-class="grid-view">
-</div>
+<div id="collectionResults" class="grid-view"></div>
 </section>
-
 
 <section id="searchPanel">
 <h2>Search Results</h2>
 
-<div id="results"
-class="grid-view">
-</div>
+<div id="results" class="grid-view"></div>
 
 <div id="pagination">
-<button id="prevPage">
-Previous
-</button>
-
-<span id="pageInfo">
-Page 1
-</span>
-
-<button id="nextPage">
-Next
-</button>
+<button id="prevPage">Previous</button>
+<span id="pageInfo">Page 1</span>
+<button id="nextPage">Next</button>
 </div>
-
 </section>
-
 
 <section id="detailsPanel">
 <h2>Book Details</h2>
@@ -85,48 +63,25 @@ Select a book to view details.
 
 </main>
 
-
-<script id="book-template"
-type="text/template">
-
-<div class="book-card"
-data-id="{{id}}">
-<img src="{{thumbnail}}"
-alt="{{title}}">
-
-<h3>{{title}}</h3>
-
-<p>{{authors}}</p>
-
+<script id="book-template" type="text/template">
+<div class="book-card" onclick="loadDetails('{{id}}')">
+    <img src="{{thumbnail}}" alt="{{title}}">
+    <h3>{{title}}</h3>
+    <p>{{authors}}</p>
 </div>
-
 </script>
 
-
-<script id="detail-template"
-type="text/template">
-
+<script id="detail-template" type="text/template">
 <div class="detail-card">
-
-<img src="{{thumbnail}}">
-
-<div>
-<h2>{{title}}</h2>
-
-<p><strong>Author:</strong>
-{{authors}}</p>
-
-<p><strong>Language:</strong>
-{{language}}</p>
-
-<p><strong>Pages:</strong>
-{{pages}}</p>
-
-<p>{{description}}</p>
+    <img src="{{thumbnail}}" alt="{{title}}">
+    <div>
+        <h2>{{title}}</h2>
+        <p><strong>Author:</strong> {{authors}}</p>
+        <p><strong>Language:</strong> {{language}}</p>
+        <p><strong>Pages:</strong> {{pages}}</p>
+        <p>{{description}}</p>
+    </div>
 </div>
-
-</div>
-
 </script>
 
 <script src="script.js"></script>
