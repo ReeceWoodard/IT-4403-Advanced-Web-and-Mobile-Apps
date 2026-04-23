@@ -1,4 +1,4 @@
-const apiKey="YOUR_API_KEY";
+const apiKey="AIzaSyD1LDXycgXy_MazXWbDpqpYApRHg3U2g0w";
 
 let currentPage=1;
 let currentQuery="";
