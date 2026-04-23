@@ -53,6 +53,9 @@ function renderBooks(books, target) {
 function loadDetails(bookId) {
     $.ajax({
         url: "https://www.googleapis.com/books/v1/volumes/" + bookId,
+        data: {
+            key: apiKey
+        },
         success: function (book) {
             let info = book.volumeInfo;
             let template = $("#detail-template").html();
@@ -95,61 +98,68 @@ function loadCollection(query) {
     });
 }
 
-$("#searchBtn").click(function () {
-    let query = $("#searchInput").val().trim();
+$(document).ready(function () {
+    $("#searchBtn").click(function () {
+        let query = $("#searchInput").val().trim();
 
-    if (query !== "") {
-        searchBooks(query, 0);
-    }
-});
+        if (query !== "") {
+            searchBooks(query, 0);
+        }
+    });
 
-$("#searchInput").keypress(function (event) {
-    if (event.which === 13) {
-        $("#searchBtn").click();
-    }
-});
+    $("#searchInput").keypress(function (event) {
+        if (event.which === 13) {
+            $("#searchBtn").click();
+        }
+    });
 
-$("#nextPage").click(function () {
-    if (currentQuery !== "") {
-        searchBooks(currentQuery, currentStart + 10);
-    }
-});
+    $("#nextPage").click(function () {
+        if (currentQuery !== "") {
+            searchBooks(currentQuery, currentStart + 10);
+        }
+    });
 
-$("#prevPage").click(function () {
-    if (currentQuery !== "" && currentStart >= 10) {
-        searchBooks(currentQuery, currentStart - 10);
-    }
-});
+    $("#prevPage").click(function () {
+        if (currentQuery !== "" && currentStart >= 10) {
+            searchBooks(currentQuery, currentStart - 10);
+        }
+    });
 
-$("#gridView").click(function () {
-    $("#results, #collectionResults")
-        .removeClass("list-view")
-        .addClass("grid-view");
-});
+    $(document).on("click", ".book-card", function () {
+        let bookId = $(this).attr("data-id");
+        loadDetails(bookId);
+    });
 
-$("#listView").click(function () {
-    $("#results, #collectionResults")
-        .removeClass("grid-view")
-        .addClass("list-view");
-});
+    $("#gridView").click(function () {
+        $("#results, #collectionResults")
+            .removeClass("list-view")
+            .addClass("grid-view");
+    });
 
-$("#showSearch").click(function () {
-    $("#searchPanel").show();
+    $("#listView").click(function () {
+        $("#results, #collectionResults")
+            .removeClass("grid-view")
+            .addClass("list-view");
+    });
+
+    $("#showSearch").click(function () {
+        $("#searchPanel").show();
+        $("#collectionPanel").hide();
+    });
+
+    $("#showCollection").click(function () {
+        $("#searchPanel").hide();
+        $("#collectionPanel").show();
+    });
+
+    $("#popularBooks").click(function () {
+        loadCollection("bestsellers");
+    });
+
+    $("#topRatedBooks").click(function () {
+        loadCollection("award winning fiction");
+    });
+
     $("#collectionPanel").hide();
+    loadCollection("classic literature");
 });
-
-$("#showCollection").click(function () {
-    $("#searchPanel").hide();
-    $("#collectionPanel").show();
-});
-
-$("#popularBooks").click(function () {
-    loadCollection("bestsellers");
-});
-
-$("#topRatedBooks").click(function () {
-    loadCollection("award winning fiction");
-});
-
-$("#collectionPanel").hide();
-loadCollection("classic literature");
