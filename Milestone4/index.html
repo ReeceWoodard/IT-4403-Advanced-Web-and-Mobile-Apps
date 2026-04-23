@@ -64,7 +64,7 @@ Select a book to view details.
 </main>
 
 <script id="book-template" type="text/template">
-<div class="book-card" onclick="loadDetails('{{id}}')">
+<div class="book-card" data-id="{{id}}">
     <img src="{{thumbnail}}" alt="{{title}}">
     <h3>{{title}}</h3>
     <p>{{authors}}</p>
